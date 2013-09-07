@@ -19,7 +19,8 @@ var directory = {
 directory.Router = Backbone.Router.extend({
     routes: {
         "":                 "home",
-        "employees/:id":    "employeeDetails"
+        "employees/:id":    "employeeDetails",
+        "employees/:id/searchJobs":    "searchJobs"
     },
     initialize: function () {
         directory.shellView = new directory.ShellView();
@@ -32,18 +33,8 @@ directory.Router = Backbone.Router.extend({
     },
 
     home: function () {
-        // Since the home view never changes, we instantiate it and render it only once
-        if (!directory.homelView) {
-            directory.homelView = new directory.HomeView();
-            directory.homelView.render();
-        } else {
-            console.log('reusing home view');
-            directory.homelView.delegateEvents(); // delegate events when the view is recycled
-        }
-        this.$content.html(directory.homelView.el);
-        directory.shellView.selectMenuItem('home-menu');
-    },
 
+    },
     employeeDetails: function (id) {
         var employee = new directory.Employee({id: id});
         var self = this;
@@ -56,11 +47,21 @@ directory.Router = Backbone.Router.extend({
             }
         });
         directory.shellView.selectMenuItem();
+    },
+    searchJobs: function (id) {
+        var employee = new directory.Employee({id: id});
+        var self = this;
+        employee.fetch({
+            success: function (data) {
+                self.$content.html(new directory.SearchView({model: data}).render().el);
+            }
+        });
+        directory.shellView.selectMenuItem();
     }
 });
 
 $(document).on("ready", function () {
-    directory.loadTemplates(["ShellView", "EmployeeView", "EmployeeSummaryView", "EmployeeListItemView"],
+    directory.loadTemplates(["ShellView", "EmployeeView", "EmployeeSummaryView", "EmployeeListItemView","SearchView","SearchFormView","SearchListItemView"],
         function () {
             directory.router = new directory.Router();
             Backbone.history.start();
