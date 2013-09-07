@@ -1,13 +1,8 @@
 var directory = {
-
     views: {},
-
     models: {},
-
     loadTemplates: function(views, callback) {
-
         var deferreds = [];
-
         $.each(views, function(index, view) {
             if (directory[view]) {
                 deferreds.push($.get('tpl/' + view + '.html', function(data) {
@@ -17,20 +12,15 @@ var directory = {
                 alert(view + " not found");
             }
         });
-
         $.when.apply(null, deferreds).done(callback);
     }
-
 };
 
 directory.Router = Backbone.Router.extend({
-
     routes: {
         "":                 "home",
-        "contact":          "contact",
         "employees/:id":    "employeeDetails"
     },
-
     initialize: function () {
         directory.shellView = new directory.ShellView();
         $('body').html(directory.shellView.render().el);
@@ -54,15 +44,6 @@ directory.Router = Backbone.Router.extend({
         directory.shellView.selectMenuItem('home-menu');
     },
 
-    contact: function () {
-        if (!directory.contactView) {
-            directory.contactView = new directory.ContactView();
-            directory.contactView.render();
-        }
-        this.$content.html(directory.contactView.el);
-        directory.shellView.selectMenuItem('contact-menu');
-    },
-
     employeeDetails: function (id) {
         var employee = new directory.Employee({id: id});
         var self = this;
@@ -76,7 +57,6 @@ directory.Router = Backbone.Router.extend({
         });
         directory.shellView.selectMenuItem();
     }
-
 });
 
 $(document).on("ready", function () {
