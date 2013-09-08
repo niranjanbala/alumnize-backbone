@@ -21,5 +21,8 @@ Backbone.sync = function (method, model, options) {
         options.dataType = "jsonp";
         return originalSync.apply(Backbone, arguments);
     }
-
+	else {
+		options.dataType = "jsonp";
+		return originalSync.apply(Backbone, arguments);
+	}
 };

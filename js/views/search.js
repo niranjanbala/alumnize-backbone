@@ -66,7 +66,6 @@ directory.NewJobPostView = Backbone.View.extend({
 	        "click .delete" : "cancelAdd"
     },
     render:function () {
-	  console.log(this.model);
 	  $(this.el).html(this.template(this.model.toJSON()));
       return this;
     },
